@@ -2,109 +2,212 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Nuestra Historia</title>
-    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Montserrat:wght@300;600&display=swap" rel="stylesheet">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Para Mi Novia ❤️</title>
+    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Montserrat:wght@400;600&display=swap" rel="stylesheet">
     <style>
-        :root {
-            --primary-red: #ff4d6d;
-            --soft-pink: #fff0f3;
+        :root { 
+            --red: #ff4d6d; 
+            --pink: #fff0f3; /* Color único para todo el fondo */
+            --brown: #d4a373; 
         }
-        body {
-            margin: 0;
-            padding: 0;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            min-height: 100vh;
-            background-color: var(--soft-pink);
-            font-family: 'Montserrat', sans-serif;
-            text-align: center;
-            color: #333;
+        
+        body { 
+            margin: 0; padding: 0; 
+            background-color: var(--pink); 
+            font-family: 'Montserrat', sans-serif; 
+            overflow-x: hidden;
+            display: flex; flex-direction: column; align-items: center;
         }
-        h1 {
-            font-family: 'Dancing Script', cursive;
-            font-size: 3rem;
-            color: var(--primary-red);
-            margin-bottom: 10px;
+
+        /* --- TENDEDERO SIN DIVISIONES --- */
+        .tendedero-container {
+            width: 100%;
+            padding: 60px 0 20px 0;
+            position: relative;
+            background: transparent; /* Eliminamos el blanco */
         }
-        #contador {
-            background: white;
-            padding: 20px;
-            border-radius: 15px;
-            box-shadow: 0 10px 20px rgba(0,0,0,0.05);
-            display: flex;
-            gap: 15px;
-            margin-top: 20px;
+
+        .cuerda {
+            position: absolute;
+            top: 50px; left: 0; right: 0;
+            height: 2px; background: var(--brown);
+            z-index: 1;
+            opacity: 0.6;
         }
-        .segmento {
-            display: flex;
-            flex-direction: column;
+
+        .tendedero {
+            display: flex; gap: 20px; padding: 0 30px;
+            overflow-x: auto; 
+            scrollbar-width: none; /* Oculta scroll en Firefox */
         }
-        .numero {
-            font-size: 2.5rem;
-            font-weight: 600;
-            color: var(--primary-red);
+        .tendedero::-webkit-scrollbar { display: none; } /* Oculta scroll en Chrome/Safari */
+
+        .foto-polaroid {
+            flex: 0 0 140px; height: 180px; background: white;
+            padding: 10px 10px 35px 10px; 
+            box-shadow: 0 10px 20px rgba(0,0,0,0.08);
+            transform: rotate(var(--r)); 
+            position: relative; z-index: 2;
+            border-radius: 2px;
         }
-        .etiqueta {
-            font-size: 0.8rem;
-            text-transform: uppercase;
-            letter-spacing: 1px;
+
+        .foto-polaroid::before { /* Pinza */
+            content: ""; position: absolute; top: -12px; left: 50%;
+            width: 10px; height: 20px; background: #bc8a5f;
+            transform: translateX(-50%); border-radius: 2px; z-index: 3;
         }
-        .corazon {
-            color: var(--primary-red);
-            font-size: 2rem;
-            margin-top: 20px;
-            animation: latido 1.2s infinite;
+
+        .foto-polaroid img { 
+            width: 100%; height: 130px; object-fit: cover; 
+            background: #eee; display: block;
         }
-        @keyframes latido {
-            0% { transform: scale(1); }
-            50% { transform: scale(1.1); }
-            100% { transform: scale(1); }
+
+        /* --- CONTADOR --- */
+        .info-container { 
+            text-align: center; 
+            padding: 40px 20px; 
+            z-index: 10; 
+            position: relative; 
+        }
+        h1 { font-family: 'Dancing Script', cursive; color: var(--red); font-size: 2.8rem; margin-bottom: 20px; }
+        #contador-tiempo { 
+            font-size: 1.4rem; font-weight: bold; color: var(--red);
+            background: white; padding: 15px 35px; border-radius: 50px;
+            box-shadow: 0 8px 20px rgba(255, 77, 109, 0.15);
+            border: 2px solid rgba(255, 77, 109, 0.3);
+            display: inline-block;
+        }
+
+        /* --- MINIJUEGO --- */
+        #game-canvas { 
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%; 
+            z-index: 100; /* Asegura que estén por encima de todo */
+            pointer-events: none; 
+        }
+        .corazon-juego { 
+            position: absolute; font-size: 40px; cursor: pointer; 
+            user-select: none; pointer-events: auto; 
+            filter: drop-shadow(0 5px 5px rgba(0,0,0,0.1));
+            will-change: transform, top;
+        }
+        #score-board { 
+            position: fixed; top: 20px; right: 20px; background: var(--red); 
+            color: white; padding: 10px 20px; border-radius: 30px; 
+            font-weight: bold; display: none; z-index: 1000;
         }
     </style>
 </head>
 <body>
 
-    <h1>Llevamos juntos...</h1>
-    
-    <div id="contador">
-        <div class="segmento">
-            <span class="numero" id="dias">00</span>
-            <span class="etiqueta">Días</span>
-        </div>
-        <div class="segmento">
-            <span class="numero" id="horas">00</span>
-            <span class="etiqueta">Hrs</span>
-        </div>
-        <div class="segmento">
-            <span class="numero" id="minutos">00</span>
-            <span class="etiqueta">Min</span>
+    <div class="tendedero-container">
+        <div class="cuerda"></div>
+        <div class="tendedero">
+            <div class="foto-polaroid" style="--r: -2deg;"><img src="img/img1.jpg.jpeg" alt="❤️"></div>
+            <div class="foto-polaroid" style="--r: 3deg;"><img src="img/img2.jpeg" alt="❤️"></div>
+            <div class="foto-polaroid" style="--r: -4deg;"><img src="img/img3.jpeg" alt="❤️"></div>
+            <div class="foto-polaroid" style="--r: 2deg;"><img src="img/img4.jpeg" alt="❤️"></div>
+            <div class="foto-polaroid" style="--r: -3deg;"><img src="img/img5.jpeg" alt="❤️"></div>
+            <div class="foto-polaroid" style="--r: 4deg;"><img src="img/img6.jpeg" alt="❤️"></div>
+            <div class="foto-polaroid" style="--r: -2deg;"><img src="img/img7.jpeg" alt="❤️"></div>
+            <div class="foto-polaroid" style="--r: 5deg;"><img src="img/img8.jpeg" alt="❤️"></div>
         </div>
     </div>
 
-    <div class="corazon">❤</div>
+    <div class="info-container">
+        <h1>Días de noviecitos</h1>
+        <div id="contador-tiempo">Calculando amor...</div>
+        <p style="color: #a38080; font-size: 0.9rem; margin-top: 25px; font-weight: 500;">
+            
+        </p>
+    </div>
+
+    <div id="score-board">Puntos: 0</div>
+    <div id="game-canvas"></div>
 
     <script>
-        
-const fechaAniversario = new Date(2025, 8, 16); 
+        // CONFIGURACIÓN DE FECHA
+        const fechaAniversario = new Date(2025, 8, 16); 
 
-        function actualizarContador() {
+        function actualizarReloj() {
             const ahora = new Date();
-            const diferencia = ahora - fechaAniversario;
+            const diff = ahora - fechaAniversario;
+            const d = Math.floor(diff / (1000*60*60*24));
+            const h = Math.floor((diff % (1000*60*60*24)) / (1000*60*60));
+            const m = Math.floor((diff % (1000*60*60)) / (1000*60));
+            document.getElementById('contador-tiempo').innerText = `${d} días, ${h}h ${m}m`;
+        }
+        setInterval(actualizarReloj, 30000);
+        actualizarReloj();
 
-            const d = Math.floor(diferencia / (1000 * 60 * 60 * 24));
-            const h = Math.floor((diferencia % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-            const m = Math.floor((diferencia % (1000 * 60 * 60)) / (1000 * 60));
+        // LÓGICA DEL JUEGO
+        const canvas = document.getElementById('game-canvas');
+        const scoreBoard = document.getElementById('score-board');
+        let puntos = 0;
+        let velocidad = 3.5;
+        let juegoActivo = false;
+        let animationId;
 
-            document.getElementById('dias').innerText = d;
-            document.getElementById('horas').innerText = h;
-            document.getElementById('minutos').innerText = m;
+        function crearCorazon() {
+            const c = document.createElement('div');
+            c.className = 'corazon-juego';
+            c.innerHTML = '❤️';
+            c.style.left = (Math.random() * 80 + 10) + 'vw';
+            c.style.top = '105vh';
+            
+            c.onclick = (e) => {
+                e.stopPropagation();
+                if(!juegoActivo) { 
+                    juegoActivo = true; 
+                    scoreBoard.style.display = 'block'; 
+                    animarJuego(); 
+                }
+                puntos++;
+                velocidad += 0.25;
+                scoreBoard.innerText = `Puntos: ${puntos}`;
+                c.style.transform = 'scale(2.5)';
+                c.style.opacity = '0';
+                c.style.transition = '0.2s';
+                setTimeout(() => c.remove(), 200);
+                crearCorazon();
+            };
+            canvas.appendChild(c);
         }
 
-        setInterval(actualizarContador, 1000);
-        actualizarContador();
+        function animarJuego() {
+            if(!juegoActivo) return;
+
+            const corazones = document.querySelectorAll('.corazon-juego');
+            let fallo = false;
+
+            corazones.forEach(c => {
+                let currentTop = parseFloat(c.style.top.replace('vh', '')); // Usamos VH para consistencia
+                
+                // Convertir px de top a valor numérico para moverlo
+                let pixelTop = c.getBoundingClientRect().top;
+                pixelTop -= velocidad;
+                c.style.top = pixelTop + 'px';
+
+                if (pixelTop < -60) {
+                    fallo = true;
+                }
+            });
+
+            if (fallo) {
+                juegoActivo = false;
+                cancelAnimationFrame(animationId);
+                alert("¡Un corazón se escapó! Pero no importa, tú ya tienes el mío. ❤️\nPuntos: " + puntos);
+                location.reload();
+                return;
+            }
+
+            animationId = requestAnimationFrame(animarJuego);
+        }
+
+        // Lanzar corazones iniciales
+        for(let i=0; i<4; i++) {
+            setTimeout(crearCorazon, i * 800);
+        }
     </script>
 </body>
 </html>
